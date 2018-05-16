@@ -16,11 +16,14 @@ export const asyncGetGalleries = ({
     }
   })
     .then(response => {
-      response.json().then(data =>
-        dispatch({
-          type: "FETCH_GALLERIES_SUCCESS",
-          payload: data.data
-        })
+      response.json().then(
+        data =>
+          page > 0
+            ? dispatch({ type: "GALLERIES_NEXT_PAGE", payload: data.data })
+            : dispatch({
+                type: "FETCH_GALLERIES_SUCCESS",
+                payload: data.data
+              })
       );
     })
     .catch(function(error) {
