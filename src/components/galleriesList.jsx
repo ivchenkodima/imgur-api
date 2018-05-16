@@ -34,27 +34,19 @@ class GalleriesList extends Component {
   }
 
   infinityScroll() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    if (
-      document.documentElement.clientHeight + scrollTop >=
-        document.documentElement.scrollHeight &&
-      !this.state.load &&
-      this.state.listEnd
-    ) {
-      let count = this.state.page + 1;
-      this.props.changeFilter({ page: count });
+    const { pageYOffset } = window;
+    const { documentElement: { clientHeight, scrollHeight } } = document;
+    const { load, listEnd, page, currentPage, perPage } = this.state;
+    const scrollTop = pageYOffset || documentElement.scrollTop;
+    if (clientHeight + scrollTop >= scrollHeight && !load && listEnd) {
+      this.props.changeFilter({ page: ++this.state.page });
       this.setState({
-        page: count,
+        page: ++this.state.page,
         load: true,
         listEnd: false,
-        currentPage: this.state.currentPage + this.state.perPage
+        currentPage: currentPage + perPage
       });
-    } else if (
-      document.documentElement.clientHeight + scrollTop >=
-        document.documentElement.scrollHeight &&
-      !this.state.load &&
-      !this.state.listEnd
-    ) {
+    } else if (clientHeight + scrollTop >= scrollHeight && !load && !listEnd) {
       this.loadNextGalleries(this.props, true);
     }
   }
